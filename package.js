@@ -6,7 +6,9 @@ Package.describe({
 
 });
 
-Package.onUse(function(api, where) {
+Package.onUse(function(api) {
+  api.versionsFrom("METEOR@0.9.0");
+
   api.use([
     'minimongo', 
     'mongo-livedata', 
@@ -28,12 +30,12 @@ Package.onUse(function(api, where) {
   }
 });
 
-Package.onTest(function(api) {
-  api.use('flash-messages-plus', 'client');
-  api.use([
-    'tinytest', 
-    'test-helpers'
-  ], 'client');
+// Package.onTest(function(api) {
+//   api.use('flash-messages-plus', 'client');
+//   api.use([
+//     'tinytest', 
+//     'test-helpers'
+//   ], 'client');
 
-  api.addFiles('messages_tests.js', 'client');
-});
+//   api.addFiles('messages_tests.js', 'client');
+// });
