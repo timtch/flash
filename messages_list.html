@@ -1,12 +1,12 @@
-<template name="flashMessages">
-  {{#each messages id}}
-    {{> flashMessage}}
-  {{/each}}
-</template>
-
 <template name="flashMessage">
   <div class="{{style}}">
     <button type="button" class="close">&times;</button>
     {{message}}
   </div> 
+</template>
+
+<template name="flash">
+  {{#each messages id}}
+    {{> flashMessage}}
+  {{/each}}
 </template>

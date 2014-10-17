@@ -1,10 +1,15 @@
+Template.flashMessage.events
+  "click .close": (e, tmpl) ->
+    e.preventDefault()
+    flash.remove tmpl.data._id
+
 Template.flashMessage.rendered = ->
-  #console.log "flash-message.rendered: %o, FM.options=%o", this, FlashMessages.options
+  #console.log "flash-message.rendered: %o, FM.options=%o", this, Flash.options
   message = @data
-  activeClass = FlashMessages.options.activeClass
-  $alert = $(@find ".#{FlashMessages.options.alertClass}")
+  activeClass = Flash.options.activeClass
+  $alert = $(@find ".#{Flash.options.alertClass}")
   Meteor.defer ->
-    flashMessages.update message._id,
+    flash.update message._id,
       $set:
         seen: true
     $alert.addClass activeClass
@@ -13,13 +18,13 @@ Template.flashMessage.rendered = ->
     setTimeout ->
       $alert.removeClass activeClass
       setTimeout ->
-        flashMessages.remove _id: message._id
+        flash.remove _id: message._id
       ,
-        FlashMessages.options.transitionWait
+        Flash.options.transitionWait
     ,
       message.options.hideDelay
 
-Template.flashMessages.helpers
+Template.flash.helpers
   messages: ->
     #console.log "messages: this=%o", this
     id = this.id
@@ -32,15 +37,11 @@ Template.flashMessages.helpers
 
     #console.log "messages: query=%o", query
 
-    if flashMessages.find(query).count()
+    if flash.find(query).count()
       # do we really want to unconditionally scroll like this?
       $('html, body').animate
         scrollTop: 0
       ,
         200
-      flashMessages.find(query)
+      flash.find(query)
 
-Template.flashMessage.events
-  "click .close": (e, tmpl) ->
-    e.preventDefault()
-    flashMessages.remove tmpl.data._id

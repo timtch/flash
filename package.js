@@ -1,8 +1,8 @@
 Package.describe({
-  name: 'timtch:flash-messages-plus',
+  name: 'timtch:flash',
   summary: "A package to display flash messages to the user.",
-  version: '0.0.1',
-  git: 'https://github.com/timtch/flash-messages'
+  version: '0.1.1',
+  git: 'https://github.com/timtch/flash'
 
 });
 
@@ -24,8 +24,8 @@ Package.onUse(function(api) {
 
   if (typeof api.export !== 'undefined') {
     api.export([
-      'FlashMessages', 
-      'flashMessages'
+      'Flash', 
+      'flash'
       ], 'client');
   }
 });

@@ -1,19 +1,19 @@
 // init
-FlashMessages.configure({transitionWait: 0})
+Flash.configure({transitionWait: 0})
 var allowDelay = 500;
 
 // Helpers
 
 var messagesCount = function () {
-    return flashMessages.find({'options.id': {$exists: false}}).count();
+    return flash.find({'options.id': {$exists: false}}).count();
 }
 
 var findOneMessage = function () {
-    return flashMessages.findOne({});
+    return flash.findOne({});
 }
 
 var cleanMessages = function () {
-    flashMessages.remove({});
+    flash.remove({});
 }
 
 // Tests
@@ -25,13 +25,13 @@ Tinytest.add('flash-messages - Messages Collection works', function (test) {
 Tinytest.add('flash-messages - Add alert message', function (test) {
     cleanMessages();
     var message = 'This is an alert message';
-    FlashMessages.sendAlert(message);
+    Flash.alert(message);
 
     test.equal(messagesCount(), 1);
 
     test.equal(findOneMessage().message, message, 'Alert messages should be ' + message);
 
-    test.equal(findOneMessage().style, FlashMessages.options.alertClasses, 'Style should match options');
+    test.equal(findOneMessage().style, Flash.options.alertClasses, 'Style should match options');
 
     test.equal(findOneMessage().seen, false, 'Seen should be false');
 });
@@ -39,13 +39,13 @@ Tinytest.add('flash-messages - Add alert message', function (test) {
 Tinytest.add('flash-messages - Add error message', function (test) {
     cleanMessages();
     var message = 'This is an error message';
-    FlashMessages.sendError(message);
+    Flash.error(message);
 
     test.equal(messagesCount(), 1);
 
     test.equal(findOneMessage().message, message, 'Error messages should be ' + message);
 
-    test.equal(findOneMessage().style, FlashMessages.options.errorClasses, 'Style should match options');
+    test.equal(findOneMessage().style, Flash.options.errorClasses, 'Style should match options');
 
     test.equal(findOneMessage().seen, false, 'Seen should be false');
 });
@@ -53,14 +53,14 @@ Tinytest.add('flash-messages - Add error message', function (test) {
 Tinytest.add('flash-messages - Add success message', function (test) {
     cleanMessages();
     var message = 'This is a success message';
-    FlashMessages.sendSuccess(message);
+    Flash.success(message);
 
     test.equal(messagesCount(), 1);
 
     test.equal(findOneMessage().message, message,
         'Success messages should be ' + message);
 
-    test.equal(findOneMessage().style, FlashMessages.options.successClasses, 'Style should match options');
+    test.equal(findOneMessage().style, Flash.options.successClasses, 'Style should match options');
 
     test.equal(findOneMessage().seen, false, 'Seen should be false');
 });
@@ -68,37 +68,37 @@ Tinytest.add('flash-messages - Add success message', function (test) {
 Tinytest.add('flash-messages - Add info message', function (test) {
     cleanMessages();
     var message = 'This is an info message';
-    FlashMessages.sendInfo(message);
+    Flash.info(message);
 
     test.equal(messagesCount(), 1);
 
     test.equal(findOneMessage().message, message,
         'Info messages should be ' + message);
 
-    test.equal(findOneMessage().style, FlashMessages.options.infoClasses, 'Style should match options');
+    test.equal(findOneMessage().style, Flash.options.infoClasses, 'Style should match options');
 
     test.equal(findOneMessage().seen, false, 'Seen should be false');
 });
 
 Tinytest.add("flash-messages - Don't remove unseen messages", function (test) {
     cleanMessages();
-    FlashMessages.sendError('message');
-    FlashMessages.clear();
+    Flash.error('message');
+    Flash.clear();
     test.equal(messagesCount(), 1);
 });
 
 testAsyncMulti('flash-messages - Remove seen messages', [
     function (test, expect) {
         cleanMessages();
-        FlashMessages.sendError('message');
+        Flash.error('message');
 
-        OnscreenDiv(Spark.render(Template.flashMessages));
+        OnscreenDiv(Spark.render(Template.flash));
         Meteor.setTimeout(expect(function () {
             test.equal(messagesCount(), 1);
-            test.equal(flashMessages.find({seen: false}).count(), 0,
+            test.equal(flash.find({seen: false}).count(), 0,
                 'Messages should be marqued as seen (seen: true)');
-            FlashMessages.clear();
-            test.equal(flashMessages.find({seen: true}).count(), 0,
+            Flash.clear();
+            test.equal(flash.find({seen: true}).count(), 0,
                 'Messages seen should be cleared');
         }), allowDelay);
     }
@@ -107,9 +107,9 @@ testAsyncMulti('flash-messages - Remove seen messages', [
 testAsyncMulti('flash-messages - Remove when click close button', [
     function (test, expect) {
         cleanMessages();
-        FlashMessages.sendError('message');
+        Flash.error('message');
 
-        OnscreenDiv(Spark.render(Template.flashMessages));
+        OnscreenDiv(Spark.render(Template.flash));
         Meteor.setTimeout(expect(function () {
             test.equal(messagesCount(), 1);
             clickElement(document.getElementsByClassName('close')[0]);
@@ -121,48 +121,48 @@ testAsyncMulti('flash-messages - Remove when click close button', [
 testAsyncMulti('flash-messages - Remove after default delay', [
     function (test, expect) {
         cleanMessages();
-        FlashMessages.sendError('message');
+        Flash.error('message');
 
-        OnscreenDiv(Spark.render(Template.flashMessages));
+        OnscreenDiv(Spark.render(Template.flash));
         Meteor.setTimeout(expect(function () {
             test.equal(messagesCount(), 1);
         }), allowDelay); // wait allowDelay ms then test to see if message made it to local collection
         Meteor.setTimeout(expect(function () {
             test.equal(messagesCount(), 0);
-        }), FlashMessages.options.hideDelay + allowDelay);
+        }), Flash.options.hideDelay + allowDelay);
     }
 ]);
 
 testAsyncMulti("flash-messages - Don't remove if autoHide is false", [
     function (test, expect) {
         cleanMessages();
-        FlashMessages.sendError('message', { autoHide: false });
+        Flash.error('message', { autoHide: false });
 
-        OnscreenDiv(Spark.render(Template.flashMessages));
+        OnscreenDiv(Spark.render(Template.flash));
         Meteor.setTimeout(expect(function () {
             test.equal(messagesCount(), 1);
         }), allowDelay);
         Meteor.setTimeout(expect(function () {
             test.equal(messagesCount(), 1);
-        }), FlashMessages.options.hideDelay + allowDelay);
+        }), Flash.options.hideDelay + allowDelay);
     }
 ]);
 
 testAsyncMulti("flash-messages - Don't remove with global config", [
     function (test, expect) {
         cleanMessages();
-        var options = _.clone(FlashMessages.options);
-        FlashMessages.configure({ autoHide: false });
-        FlashMessages.sendError('message');
-        FlashMessages.options = options
+        var options = _.clone(Flash.options);
+        Flash.configure({ autoHide: false });
+        Flash.error('message');
+        Flash.options = options
 
-        OnscreenDiv(Spark.render(Template.flashMessages));
+        OnscreenDiv(Spark.render(Template.flash));
         Meteor.setTimeout(expect(function () {
             test.equal(messagesCount(), 1);
         }), allowDelay);
         Meteor.setTimeout(expect(function () {
             test.equal(messagesCount(), 1);
-        }), FlashMessages.options.hideDelay + allowDelay);
+        }), Flash.options.hideDelay + allowDelay);
     }
 ]);
 
@@ -170,9 +170,9 @@ testAsyncMulti('flash-messages - specify custom auto hide delay', [
     function (test, expect) {
         cleanMessages();
         var hideDelay = 1000;
-        FlashMessages.sendError('message', { hideDelay: hideDelay });
+        Flash.error('message', { hideDelay: hideDelay });
 
-        OnscreenDiv(Spark.render(Template.flashMessages));
+        OnscreenDiv(Spark.render(Template.flash));
         Meteor.setTimeout(expect(function () {
             test.equal(messagesCount(), 1);
         }), allowDelay);
@@ -185,13 +185,13 @@ testAsyncMulti('flash-messages - specify custom auto hide delay', [
 testAsyncMulti('flash-messages - Set auto hide delay to 1 second with global config', [
     function (test, expect) {
         cleanMessages();
-        var options = _.clone(FlashMessages.options);
+        var options = _.clone(Flash.options);
         var hideDelay = 1000;
-        FlashMessages.configure({ hideDelay: hideDelay });
-        FlashMessages.sendError('message');
-        FlashMessages.options = options
+        Flash.configure({ hideDelay: hideDelay });
+        Flash.error('message');
+        Flash.options = options
 
-        OnscreenDiv(Spark.render(Template.flashMessages));
+        OnscreenDiv(Spark.render(Template.flash));
         Meteor.setTimeout(expect(function () {
             test.equal(messagesCount(), 1);
         }), allowDelay);
@@ -204,13 +204,13 @@ testAsyncMulti('flash-messages - Set auto hide delay to 1 second with global con
 testAsyncMulti('flash-messages - Override global config', [
     function (test, expect) {
         cleanMessages();
-        var options = _.clone(FlashMessages.options);
-        FlashMessages.configure({ autoHide: false, hideDelay: 8000 });
+        var options = _.clone(Flash.options);
+        Flash.configure({ autoHide: false, hideDelay: 8000 });
         var hideDelay = 1000;
-        FlashMessages.sendError('message', { autoHide: true, hideDelay: hideDelay });
-        FlashMessages.options = options
+        Flash.error('message', { autoHide: true, hideDelay: hideDelay });
+        Flash.options = options
 
-        OnscreenDiv(Spark.render(Template.flashMessages));
+        OnscreenDiv(Spark.render(Template.flash));
         Meteor.setTimeout(expect(function () {
             test.equal(messagesCount(), 1);
         }), allowDelay);

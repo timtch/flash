@@ -21,18 +21,18 @@ You can see [a demo of the original package](http://flash-messages-demo.meteor.c
 
 Include the template somewhere in your index.html file:
 ```javascript
-  {{> flashMessages}}
+  {{> flash}}
 ```
 And then send messages:
 ```javascript
-  FlashMessages.sendAlert(MESSAGE);
-  FlashMessages.sendError(MESSAGE);
-  FlashMessages.sendSuccess(MESSAGE);
-  FlashMessages.sendInfo(MESSAGE);
+  Flash.alert(MESSAGE);
+  Flash.error(MESSAGE);
+  Flash.success(MESSAGE);
+  Flash.info(MESSAGE);
 ```
 To clear messages:
 ```javascript
-  FlashMessages.clear();
+  Flash.clear();
 ```
 
 Only the seen messages will be cleared.
@@ -48,7 +48,7 @@ based on `meteor` circa `0.7.x` the following may be used:
 
 You can include the provided template either directly in an HTML file or in another template like so:
 ```javascript
-  {{> flashMessages myFlashIdHelper}}
+  {{> flash myFlashIdHelper}}
 ```
 
 where `myFlashIdHelper` is a function which returns an object with an `id` property.
@@ -75,18 +75,18 @@ Template.myTemplate.helpers = {
 
 And then send messages:
 ```javascript
-  FlashMessages.sendAlert(MESSAGE, {id: 'myFlashId'});
-  FlashMessages.sendError(MESSAGE, {id: 'myFlashId'});
-  FlashMessages.sendSuccess(MESSAGE, {id: 'myFlashId'});
-  FlashMessages.sendInfo(MESSAGE, {id: 'myFlashId'});
+  Flash.alert(MESSAGE, {id: 'myFlashId'});
+  Flash.error(MESSAGE, {id: 'myFlashId'});
+  Flash.success(MESSAGE, {id: 'myFlashId'});
+  Flash.info(MESSAGE, {id: 'myFlashId'});
 ```
 
 ##Configure
 
-You can configure globally the way the messages behave with FlashMessages.configure (the below sample shows the default values):
+You can configure globally the way the messages behave with Flash.configure (the below sample shows the default values):
 
 ```javascript
-  FlashMessages.configure({
+  Flash.configure({
     autoHide: true
     hideDelay: 5000
     activeClass: 'in'
@@ -119,10 +119,10 @@ set to `false` to require the user to click the message to dismiss it.
 
 You can also set `autoHide`, `hideDelay` and `id` options on messages. This will override global configuration:
 ```javascript
-  FlashMessages.sendAlert(MESSAGE, { autoHide: false });
-  FlashMessages.sendError(MESSAGE, { hideDelay: 2000 });
-  FlashMessages.sendSuccess(MESSAGE, { autoHide: true, hideDelay: 8000 });
-  FlashMessages.sendInfo(MESSAGE, {id: 'myFlashId');
+  Flash.alert(MESSAGE, { autoHide: false });
+  Flash.error(MESSAGE, { hideDelay: 2000 });
+  Flash.success(MESSAGE, { autoHide: true, hideDelay: 8000 });
+  Flash.info(MESSAGE, {id: 'myFlashId');
 ```
 
 ###CSS Configuration for a fade transition
